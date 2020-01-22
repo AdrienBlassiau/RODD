@@ -47,3 +47,27 @@ subject to {
   	    sum(j in width)
   	      log(1-proba[k][i][j]) * xp[i][j] <= log(1-alpha[k]);
 }
+
+execute PROBA_SURVIE{
+	write("[ ")
+	for (var k in species) {
+		var s = 0;
+		var n = 0;
+		for (var i in height) {
+			for (var j in width) {
+				if (k <= p)
+					s += Math.log(1-proba[k][i][j]) * xc[i][j];
+				else
+					s += Math.log(1-proba[k][i][j]) * xp[i][j];
+			}		
+		}
+		write(1-Math.exp(s) + " ")
+	}
+	writeln("]")
+}
+
+main {
+	thisOplModel.generate();
+	cplex.solve();
+	thisOplModel.postProcess();
+}
