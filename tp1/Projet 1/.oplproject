@@ -10,6 +10,14 @@
 			<ref name="Projet 1.dat" type="data">
 			</ref>
 		</config>
+		<config default="false" name="Configuration 2" category="opl">
+			<ref name="Projet 1.mod" type="model">
+			</ref>
+			<ref name="Projet 1.dat" type="data">
+			</ref>
+			<ref name="Projet 1.ops" type="setting">
+			</ref>
+		</config>
 	</configs>
 	
 </project>
