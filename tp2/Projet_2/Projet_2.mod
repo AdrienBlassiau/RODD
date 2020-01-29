@@ -42,7 +42,7 @@ minimize f - lambda * g;
 
 subject to {
   Computef :
- 	f == sum(i1 in height) sum(j1 in width) sum(i2 in height) sum(j2 in width) d[i1][j1][i2][j2]*y[i1][j1][i2][j2];
+ 	f == sum(i1 in height) sum(j1 in width) sum(i2 in height) sum(j2 in width : (i1 != i2) || (j1 != j2)) d[i1][j1][i2][j2]*y[i1][j1][i2][j2];
  	
   Computeg : 
  	g == sum(i in height) sum(j in width) x[i][j];
@@ -53,6 +53,9 @@ subject to {
   
   BinPack :
   	sum(i in height) sum(j in width) x[i][j]*c[i][j] <= B;
+  	
+  SameDist :
+  	sum(i in height) sum(j in width) y[i][j][i][j] == 0;
   	
   MinDist1 :
   	forall(i1 in height)
@@ -75,6 +78,15 @@ execute PRINT_SOLUCE {
 	writeln();
 }
 
+execute PRINT_SOLUCE_2 {
+	for (var i1 in height)
+		for (var j1 in width)
+			for (var i2 in height)
+				for (var j2 in width)
+					write(y[i1][j1][i2][j2] + " ");
+	writeln();
+}
+
 main{
 	thisOplModel.generate();
 	cplex.solve();
@@ -89,7 +101,7 @@ main{
 		var currentlambda = currentf/currentg;
 		
 		var data = thisOplModel.dataElements;
-		data.lambda = currentlmabda;
+		data.lambda = currentlambda;
 		var def = thisOplModel.modelDefinition;
 		thisOplModel = new IloOplModel(def,cplex);
 		thisOplModel.addDataSource(data);
