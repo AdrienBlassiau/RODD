@@ -9,7 +9,7 @@ int n = ...;
 int B = ...;
 int Amin = ...;
 int Amax = ...;
-int lambda = ...;
+float lambda = ...;
 
 
 range height = 1..m;
@@ -42,9 +42,9 @@ minimize f - lambda * g;
 
 subject to {
   Computef :
- 	f == sum(i1 in height) sum(j1 in width) sum(i2 in height) sum(j2 in width) d[i1][j1][i2][j2]*y[i1][j1][i2][j2];
+ 	f == sum(i1 in height) sum(j1 in width) sum(i2 in height : i2 != i1) sum(j2 in width : j2 != j1) d[i1][j1][i2][j2]*y[i1][j1][i2][j2];
  	
-  Computeg : 
+  Computeg :
  	g == sum(i in height) sum(j in width) x[i][j];
  
   TotalArea :
@@ -53,7 +53,7 @@ subject to {
   
   BinPack :
   	sum(i in height) sum(j in width) x[i][j]*c[i][j] <= B;
-  	
+
   MinDist1 :
   	forall(i1 in height)
   	  forall(j1 in width)
@@ -73,6 +73,10 @@ execute PRINT_SOLUCE {
 		for (var j in width)
 			write(x[i][j] + " ");
 	writeln();
+	writeln(lambda);
+	writeln(f/g)
+	writeln(f)
+	writeln(lambda*g)
 }
 
 main{
@@ -87,13 +91,22 @@ main{
 		var currentf = thisOplModel.f;
 		var currentg = thisOplModel.g;
 		var currentlambda = currentf/currentg;
+
+		var subData = new IloOplDataElements();
 		
-		var data = thisOplModel.dataElements;
-		data.lambda = currentlmabda;
+		var masterOpl = thisOplModel;
+    	subData.m = masterOpl.m;
+    	subData.n = masterOpl.n;
+    	subData.B = masterOpl.B;
+    	subData.Amin = masterOpl.Amin;
+    	subData.Amax = masterOpl.Amax;
+    	subData.c = masterOpl.c;
+		subData.lambda = currentlambda;
+		
 		var def = thisOplModel.modelDefinition;
 		thisOplModel = new IloOplModel(def,cplex);
-		thisOplModel.addDataSource(data);
-		
+		thisOplModel.addDataSource(subData);
+
 		thisOplModel.generate();
 		cplex.solve();
 		thisOplModel.postProcess();
