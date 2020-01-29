@@ -9,7 +9,7 @@ int n = ...;
 int B = ...;
 int Amin = ...;
 int Amax = ...;
-int lambda = ...;
+float lambda = ...;
 
 
 range height = 1..m;
@@ -42,33 +42,33 @@ minimize f - lambda * g;
 
 subject to {
   Computef :
- 	f == sum(i1 in height) sum(j1 in width) sum(i2 in height) sum(j2 in width : (i1 != i2) || (j1 != j2)) d[i1][j1][i2][j2]*y[i1][j1][i2][j2];
- 	
-  Computeg : 
+ 	f == sum(i1 in height) sum(j1 in width) sum(i2 in height : i2 != i1) sum(j2 in width : j2 != j1) d[i1][j1][i2][j2]*y[i1][j1][i2][j2];
+
+  Computeg :
  	g == sum(i in height) sum(j in width) x[i][j];
- 
+
   TotalArea :
  	sum(i in height) sum(j in width) x[i][j] <= Amax;
 	Amin <= sum(i in height) sum(j in width) x[i][j];
-  
+
   BinPack :
   	sum(i in height) sum(j in width) x[i][j]*c[i][j] <= B;
-  	
+
   SameDist :
   	sum(i in height) sum(j in width) y[i][j][i][j] == 0;
-  	
+
   MinDist1 :
   	forall(i1 in height)
   	  forall(j1 in width)
   	    forall(i2 in height)
   	      forall(j2 in width)
   	        y[i1][j1][i2][j2] <= x[i2][j2];
- 
+
   MinDist2 :
   	forall(i1 in height)
   	  forall(j1 in width)
   	    sum(i2 in height) sum(j2 in width) y[i1][j1][i2][j2] == x[i1][j1];
-  	  
+
 }
 
 execute PRINT_SOLUCE {
@@ -76,6 +76,10 @@ execute PRINT_SOLUCE {
 		for (var j in width)
 			write(x[i][j] + " ");
 	writeln();
+	writeln(lambda);
+	writeln(f/g)
+	writeln(f)
+	writeln(lambda*g)
 }
 
 execute PRINT_SOLUCE_2 {
@@ -91,21 +95,30 @@ main{
 	thisOplModel.generate();
 	cplex.solve();
 	thisOplModel.postProcess();
-	
+
 	/*var xlambda = thisOplModel.x;*/
 	var epsilon = 0.001;
-	
+
 	while(cplex.getObjValue() > epsilon){
 		var currentf = thisOplModel.f;
 		var currentg = thisOplModel.g;
 		var currentlambda = currentf/currentg;
-		
-		var data = thisOplModel.dataElements;
-		data.lambda = currentlambda;
+
+		var subData = new IloOplDataElements();
+
+		var masterOpl = thisOplModel;
+    	subData.m = masterOpl.m;
+    	subData.n = masterOpl.n;
+    	subData.B = masterOpl.B;
+    	subData.Amin = masterOpl.Amin;
+    	subData.Amax = masterOpl.Amax;
+    	subData.c = masterOpl.c;
+		subData.lambda = currentlambda;
+
 		var def = thisOplModel.modelDefinition;
 		thisOplModel = new IloOplModel(def,cplex);
-		thisOplModel.addDataSource(data);
-		
+		thisOplModel.addDataSource(subData);
+
 		thisOplModel.generate();
 		cplex.solve();
 		thisOplModel.postProcess();
