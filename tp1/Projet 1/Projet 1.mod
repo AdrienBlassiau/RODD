@@ -29,9 +29,9 @@ minimize sum(i in height) sum(j in height) c[i][j] * xp[i][j];
 subject to {
   ctBords:
 	sum(i in height) xc[i][1] == 0;
-	sum(i in height) xc[i][m] == 0;
+	sum(i in height) xc[i][n] == 0;
 	sum(j in width) xc[1][j] == 0;
-	sum(j in width) xc[n][j] == 0;
+	sum(j in width) xc[m][j] == 0;
   ctProtectedArea:
   	forall(i in 2..m-1)
   	  forall(j in 2..n-1)
