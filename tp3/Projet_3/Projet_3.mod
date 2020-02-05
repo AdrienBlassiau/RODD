@@ -22,7 +22,7 @@ range humains = 1..N;
 range approx = 1..T;
 
 int individu[humains][paires][genes][alleles] = ...;
-float disparition[humains][genes][alleles];
+float disparition[humains][genes];
 
 float theta[approx];
 
@@ -35,7 +35,7 @@ execute FillDisparition {
 		for (var j in genes) {
 			var diff = individu[i][1][j][1] + individu[i][1][j][2] - 3;
 			if (diff > 0) {
-				disparition[i][j][1] = 1;
+				disparition[i][j] = 1;
 				disparition[i][j][2] = 0;
   			}
   			else if (diff < 0) {
@@ -44,7 +44,7 @@ execute FillDisparition {
   			}
   			else {
   				disparition[i][j][1] = 1/2;
-  				disparition[i][j][2] = 1/2;  			
+  				disparition[i][j][2] = 1/2;
   			}
 		}
 	}
@@ -69,10 +69,10 @@ subject to {
   	  0 <= x[i] <= 3;
   CrtProba1:
   	forall(j in genes, k in alleles)
-  	  z[j][k] >= t[j][k] - sum(i in humains : disparition[i][j][k] == 1) x[i];
+  	  z[j][k] >= t[j][k] - sum(i in humains : individu[i][1][j][1] == individu[i][1][j][2] && individu[i][1][j][1] == k) x[i];
   CrtProba2:
   	forall(r in approx, j in genes, k in alleles)
-  	  log(theta[r]) + (1/theta[r]) * (t[j][k] - theta[r]) >= sum(i in humains : disparition[i][j][k] != 1) x[i] * log(0.5);
+  	  ln(theta[r]) + (1/theta[r]) * (t[j][k] - theta[r]) >= sum(i in humains : individu[i][1][j][1] != individu[i][1][j][2]) x[i] * ln(0.5);
   CrtZNNeg:
   	forall(j in genes, k in alleles)
   	  z[j][k] >= 0;
