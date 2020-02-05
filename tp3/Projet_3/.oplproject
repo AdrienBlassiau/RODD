@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ASCII"?><project>
+	<version>1.0</version>
+	<description>Protection de la diversit&amp;#233; g&amp;#233;n&amp;#233;tique</description>
+	<configs>
+		<config default="true" name="Configuration 1" category="opl">
+			<ref name="Projet_3.mod" type="model">
+			</ref>
+			<ref name="Projet_3.ops" type="setting">
+			</ref>
+			<ref name="Projet_3.dat" type="data">
+			</ref>
+		</config>
+	</configs>
+	
+</project>
