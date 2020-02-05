@@ -11,7 +11,7 @@ int C = ...;
 int G = ...;
 int A = ...;
 int T = ...;
-int init = ...;
+float init = ...;
 
 range males = 1..Nm;
 range femelles = Nm+1..Nm+Nf;
@@ -52,7 +52,7 @@ execute FillDisparition {
 
 execute FillTheta {
 	theta[1] = init;
-	for (r in approx) {
+	for (var r in approx) {
 		theta[r] = Math.pow(theta[1],(T-r)/(T-1));	
 	}
 }
