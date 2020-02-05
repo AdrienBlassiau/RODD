@@ -69,8 +69,11 @@ subject to {
   	  0 <= x[i] <= 3;
   CrtProba1:
   	forall(j in genes, k in alleles)
-  	  z[j][k] >= t[j][k] - sum(i in humains : individu[i][1][j][k] == 1) x[i];
+  	  z[j][k] >= t[j][k] - sum(i in humains : disparition[i][j][k] == 1) x[i];
   CrtProba2:
   	forall(r in approx, j in genes, k in alleles)
-  	  log(theta[r]) + (1/theta[r]) * (t[j][k] - theta[r]) >= sum(i in humains : individu[i][1][j][k] != 1) x[i] * log(0.5);
+  	  log(theta[r]) + (1/theta[r]) * (t[j][k] - theta[r]) >= sum(i in humains : disparition[i][j][k] != 1) x[i] * log(0.5);
+  CrtZNNeg:
+  	forall(j in genes, k in alleles)
+  	  z[j][k] >= 0;
 }
