@@ -22,33 +22,12 @@ range humains = 1..N;
 range approx = 1..T;
 
 int individu[humains][paires][genes][alleles] = ...;
-float disparition[humains][genes];
 
 float theta[approx];
 
 dvar float z[genes][alleles];
-dvar int x[humains];
 dvar float t[genes][alleles];
-
-execute FillDisparition {
-	for (var i in humains) {
-		for (var j in genes) {
-			var diff = individu[i][1][j][1] + individu[i][1][j][2] - 3;
-			if (diff > 0) {
-				disparition[i][j] = 1;
-				disparition[i][j][2] = 0;
-  			}
-  			else if (diff < 0) {
-  				disparition[i][j][1] = 0;
-  				disparition[i][j][2] = 1;  			
-  			}
-  			else {
-  				disparition[i][j][1] = 1/2;
-  				disparition[i][j][2] = 1/2;
-  			}
-		}
-	}
-}
+dvar int x[humains];
 
 execute FillTheta {
 	theta[1] = init;
