@@ -1,6 +1,6 @@
 /*********************************************
  * OPL 12.8.0.0 Model
- * Author: Adrien
+ * Author: Adrien Blassiau Corentin Juvigny
  * Creation Date: 5 févr. 2020 at 13:18:15
  *********************************************/
 
