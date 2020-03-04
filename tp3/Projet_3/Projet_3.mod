@@ -1,6 +1,6 @@
 /*********************************************
- * Author: Adrien
  * OPL 12.8.0.0 Model
+ * Author: Adrien Blassiau Corentin Juvigny
  * Creation Date: 5 févr. 2020 at 13:18:15
  *********************************************/
 
@@ -32,7 +32,7 @@ dvar int x[humains];
 execute FillTheta {
 	theta[1] = init;
 	for (var r in approx) {
-		theta[r] = Math.pow(theta[1],(T-r)/(T-1));	
+		theta[r] = Math.pow(theta[1],(T-r)/(T-1));
 	}
 }
 
@@ -58,7 +58,7 @@ subject to {
 }
 
  execute{
- 	var total=0	 
+ 	var total=0
 	for(var i in genes){
 		for(var j in alleles){
 			var somme = 1;
@@ -70,7 +70,7 @@ subject to {
 					somme *= Math.pow(0.5, x[k]);
 				}
 			}
-			total+=somme	
+			total+=somme
 			writeln(i, ",", j, ": ", somme);
 		}
 	}
