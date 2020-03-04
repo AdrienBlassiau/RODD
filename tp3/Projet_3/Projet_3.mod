@@ -1,6 +1,6 @@
 /*********************************************
- * OPL 12.8.0.0 Model
  * Author: Adrien
+ * OPL 12.8.0.0 Model
  * Creation Date: 5 févr. 2020 at 13:18:15
  *********************************************/
 
@@ -55,4 +55,24 @@ subject to {
   CrtZNNeg:
   	forall(j in genes, k in alleles)
   	  z[j][k] >= 0;
+}
+
+ execute{
+ 	var total=0	 
+	for(var i in genes){
+		for(var j in alleles){
+			var somme = 1;
+			for(var k in humains){
+				if(individu[k][1][i][1] == individu[k][1][i][2] && individu[k][1][i][1] == j) {
+					somme *= 0;
+				}
+				else if(individu[k][1][i][1] != individu[k][1][i][2]){
+					somme *= Math.pow(0.5, x[k]);
+				}
+			}
+			total+=somme	
+			writeln(i, ",", j, ": ", somme);
+		}
+	}
+	writeln("total: ", total);
 }
