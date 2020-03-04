@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?><project>
+	<version>1.0</version>
+	<description>Probl&amp;#232;me de Planification Culturale Durable</description>
+	<configs>
+		<config default="true" name="Configuration 1" category="opl">
+			<ref name="Projet_5.mod" type="model">
+			</ref>
+			<ref name="Projet_5.dat" type="data">
+			</ref>
+		</config>
+	</configs>
+	
+</project>
