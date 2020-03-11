@@ -17,7 +17,6 @@ range height = 1..m;
 int t[height][width] = ...;
 
 int A[height][width][height][width];
-int B[height][width];
 
 dvar boolean x[height][width];
 dvar float+ d[height][width];
@@ -27,19 +26,15 @@ execute COMPUTE_AB {
 		for(var j in width) {
 			if (j > 1) {
 				A[i][j][i][j-1] = 1;
-				B[i][j] += 1;
 			}
 			if (j < n) {
 				A[i][j][i][j+1] = 1;
-				B[i][j] += 1;
 			}
 			if (i > 1) {
 				A[i][j][i-1][j] = 1;
-				B[i][j] += 1;
 			}
 			if (i < m) {
 				A[i][j][i+1][j] = 1;
-				B[i][j] += 1;
 			}
 		}		
 	}
@@ -51,5 +46,7 @@ subject to {
   ComputeD :
   	forall (i in height)
   	  forall (j in width)
-  		d[i][j] >= sum(k in height, l in width) A[i][j][k][l] * x[k][l] - B[i][j] * (1 - x[i][j]);
+  		d[i][j] >= sum(k in height, l in width) A[i][j][k][l] * x[k][l] - 4 * (1 - x[i][j]);
+  LIMITParcell :
+	sum(i in height, j in width) x[i][j] >= 60;
 }
