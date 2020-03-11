@@ -39,14 +39,14 @@ minimize sum(p in Parcelles) sum(arc in InitArc) x[arc][1][p];
 
 subject to {
   conservation:
-  	forall(t in 2..T-1)
+  	forall(t in 1..T-1)
   	  forall(p in Parcelles)
   	    forall(s in Sommets)
-  	      sum(arc in Arcs : arc.i == s) x[arc][t][p] == sum(arc in Arcs : arc.f == s) x[arc][t][p];
+  	      sum(arc in Arcs : arc.i == s) x[arc][t+1][p] == sum(arc in Arcs : arc.f == s) x[arc][t][p];
   rendement:
   	forall(t in Periode)
   	  forall(j in C[s[t]])
-  	    sum(p in Parcelles) sum(arc in Arcs : arc.f.j == j) arc.rend * x[arc][t][p] >= Demande[j][t];
+  	   sum(p in Parcelles) sum(arc in Arcs : arc.f.j == j) arc.rend * x[arc][t][p] >= Demande[j][t];
   flotUnitaire:
   	forall(p in Parcelles)
   	  sum(arc in InitArc) x[arc][1][p] <= 1;
