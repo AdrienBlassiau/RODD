@@ -18,7 +18,7 @@ int t[height][width] = ...;
 
 int A[height][width][height][width];
 
-dvar float+ x[height][width];
+dvar boolean x[height][width];
 dvar float+ y[height][width][height][width];
 
 execute COMPUTE_AB {
