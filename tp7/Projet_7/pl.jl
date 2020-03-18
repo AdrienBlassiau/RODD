@@ -27,8 +27,6 @@ function run(inst, sol)
     p = inst.p
     d = inst.d
 
-    println(inst)
-
 	m = Model(with_optimizer(CPLEX.Optimizer))
 
 	@variable(m, 0 <= x[1:T,1:M])
