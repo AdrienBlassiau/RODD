@@ -40,10 +40,9 @@ if length(ARGS) == 2
   while length(ARGS) > 0
     pop!(ARGS)
   end
-
   include("../" * algorithm)
   for input_file in readdir(test_folder)
-    if(endswith(input_file, ".txt"))
+    if(endswith(input_file, ".dat"))
       println(input_file)
       main(test_folder * input_file)
     end
