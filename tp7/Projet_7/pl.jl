@@ -27,6 +27,8 @@ function run(inst, sol)
     p = inst.p
     d = inst.d
 
+    println(inst)
+
 	m = Model(with_optimizer(CPLEX.Optimizer))
 
 	@variable(m, 0 <= x[1:T,1:M])
@@ -35,27 +37,27 @@ function run(inst, sol)
 
 	## OBJECTIF
 	##
-	@objective(m, Min, sum(sum(p[t][m]*x[t,m]+f[t][m]*y[t,m] for m in 1:M) +h[t]*s[t] for t in 1:T))
+	@objective(m, Min, sum(sum(p[t][j]*x[t,j]+f[t][j]*y[t,j] for j in 1:M)+h[t]*s[t] for t in 1:T))
 
 	## CONTRA1NTE 1
 	##
 	## Contrainte de conservation
-	@constraint(m, constraint1[t in 2:T], sum(x[t,m]-s[t]+s[t-1] for m in 1:M) == d[t])
+	@constraint(m, constraint1[t in 2:T], sum(x[t,j]-s[t]+s[t-1] for j in 1:M) == d[t])
 
 	## CONTRA1NTE 2
 	##
 	## Contrainte de conservation
-	@constraint(m, constraint2, sum(x[1,m]-s[1] for m in 1:M) == d[1])
+	@constraint(m, constraint2, sum(x[1,j]-s[1] for j in 1:M) == d[1])
 
 	## CONTRA1NTE 3
 	##
 	## Contrainte de demande
-	@constraint(m, constraint3[t in 1:T; m in 1:M], sum(d[t1] for t1 in t..T)*y[t,m]>=x[t,m])
+	@constraint(m, constraint3[t in 1:T, j in 1:M], sum(d[t1] for t1 in t:T)*y[t,j]>=x[t,j])
 
 	## CONTRA1NTE 4
 	##
 	## Contrainte écologique
-	@constraint(m, constraint4[t in R:T], sum(sum( (e[t][m]-Emax[t1])*x[t1,m] for m in 1:M) for t1 in t-R+1:t) <=0)
+	@constraint(m, constraint4[t in R:T], sum(sum( (e[t][j]-Emax[t1])*x[t1,j] for j in 1:M) for t1 in t-R+1:t) <=0)
 
 
 	optimize!(m)
@@ -71,7 +73,8 @@ function run(inst, sol)
 	# end
 	# sol.x = solx
 
-	return m
+	println(x)
+	return (m,x,s,y)
 end
 
 
@@ -83,27 +86,15 @@ Le paramètre cpu time est le temps de calcul de `run`. Les valeurs de `inst` et
 function post_process(cpu_time::Float64, inst, sol, others)
 
 	# Run a renvoyé le modèle et ses variables, qui ont été mis dans others.
-	m = others
+	m,x,s,y = others
 
 	print(m)
-	# println()
 
-	# n = inst.n
-	# solx = value.(x)
-	# nb_routes = 0
-	# for i in 1:n
-	# 	if solx[1,i]>10e-5
-	# 		nb_routes+=1
-	# 	end
-	# end
 
-	# println("TERMINAISON : ", termination_status(m))
 	println("OBJECTIF : $(objective_value(m))")
-	# println("NOMBRE DE ROUTES : $nb_routes")
-	# println("VALEURS de τ : $(value.(τ))")
-	# println("VALEURS de u : $(value.(u))")
-	# println("VALEURS de y : $(value.(y))")
-	# println("VALEURS de x : $(value.(x))")
+	println("VALEURS de x : $(value.(x))")
+	println("VALEURS de s : $(value.(s))")
+	println("VALEURS de y : $(value.(y))")
 
 	println("Temps de calcul : $cpu_time.")
 end

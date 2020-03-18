@@ -21,7 +21,6 @@ module Generator
 
   include("./problem.jl")
   import .G_ULS: Instance
-  using Distributions
   using Dates
 
   @doc """
@@ -43,9 +42,6 @@ module Generator
     inst.T = T
     inst.M = M
     inst.R = R
-
-    # Loi de probabilité
-    d_distrib = Distributions.DiscreteUniform(dmin, dmax)
 
     # Emax
     for i in 1:inst.T
@@ -77,7 +73,7 @@ module Generator
 
     # d
     for i in 1:inst.T
-      push!(inst.d, rand(d_distrib))
+      push!(inst.d, rand(dmin:dmax))
     end
 
     return inst
