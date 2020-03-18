@@ -18,7 +18,6 @@ int e[temps][mode]=...;
 int h[temps]=...;
 int d[temps]= ...;
 int Emax[temps]=...;
-int R=6;
 
 dvar float+ x[temps][mode];
 dvar float+ s[temps];
