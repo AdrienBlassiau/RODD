@@ -42,7 +42,7 @@ function run(inst, sol)
 	## CONTRA1NTE 1
 	##
 	## Contrainte de conservation
-	@constraint(m, constraint1[t in 2:T], sum(x[t,j]-s[t]+s[t-1] for j in 1:M) == d[t])
+	@constraint(m, constraint1[t in 2:T], sum( x[t,j] for j in 1:M)-s[t]+s[t-1] == d[t])
 
 	## CONTRA1NTE 2
 	##
