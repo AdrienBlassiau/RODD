@@ -27,8 +27,6 @@ function run(inst, sol)
     p = inst.p
     d = inst.d
 
-    println(inst)
-
 	m = Model(with_optimizer(CPLEX.Optimizer))
 
 	@variable(m, 0 <= x[1:T,1:M])
@@ -57,7 +55,7 @@ function run(inst, sol)
 	## CONTRA1NTE 4
 	##
 	## Contrainte écologique
-	@constraint(m, constraint4[t in R:T], sum(sum( (e[t][j]-Emax[t1])*x[t1,j] for j in 1:M) for t1 in t-R+1:t) <=0)
+	@constraint(m, constraint4[t in R:T], sum(sum( (e[t1][j]-Emax[t1])*x[t1,j] for j in 1:M) for t1 in t-R+1:t) <=0)
 
 
 	optimize!(m)
@@ -89,9 +87,16 @@ function post_process(cpu_time::Float64, inst, sol, others)
 	m,x,s,y = others
 
 	print(m)
-
+	solx = value.(x)
+	emission_moyenne = 0
+	for i in 1:inst.T
+	    for j in 1:inst.M
+	    	emission_moyenne+=solx[i,j]*inst.e[i][j]
+	    end
+	end
 
 	println("OBJECTIF : $(objective_value(m))")
+	println("emission totale : $(emission_moyenne)")
 	println("VALEURS de x : $(value.(x))")
 	println("VALEURS de s : $(value.(s))")
 	println("VALEURS de y : $(value.(y))")
