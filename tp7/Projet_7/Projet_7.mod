@@ -7,6 +7,7 @@
 
 int T=...;
 int M=...;
+int R=...;
 
 range mode=1..M;
 range temps=1..T;
