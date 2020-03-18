@@ -32,9 +32,9 @@ subject to {
 		forall(t in 2..T){ 
 			sum(m in mode)
 		      	x[t][m]-s[t] + s[t-1]==d[t];  
+	
 		}	
-		
-	Contrainte_Conservation_Limite:
+	Contrainte_Conservation_Limite:	
 		sum(m in mode)x[1][m]-s[1]==d[1]; 
 	
 	Contrainte_Demande:
