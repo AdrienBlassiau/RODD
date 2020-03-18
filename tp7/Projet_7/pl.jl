@@ -89,11 +89,14 @@ function post_process(cpu_time::Float64, inst, sol, others)
 	print(m)
 	solx = value.(x)
 	emission_moyenne = 0
+	prod_moyenne = 0
 	for i in 1:inst.T
 	    for j in 1:inst.M
 	    	emission_moyenne+=solx[i,j]*inst.e[i][j]
+	    	prod_moyenne+=solx[i,j]
 	    end
 	end
+	emission_moyenne = emission_moyenne/prod_moyenne
 
 	println("OBJECTIF : $(objective_value(m))")
 	println("emission totale : $(emission_moyenne)")
