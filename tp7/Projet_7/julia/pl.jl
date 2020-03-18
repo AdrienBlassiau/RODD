@@ -57,21 +57,8 @@ function run(inst, sol)
 	## Contrainte écologique
 	@constraint(m, constraint4[t in R:T], sum(sum( (e[t1][j]-Emax[t1])*x[t1,j] for j in 1:M) for t1 in t-R+1:t) <=0)
 
-
 	optimize!(m)
 
-	# solx = value.(x)
-
-	# for i in 1:n
-	# 	for j in 1:n
-	# 		tagi = inst.tag[i]
-	# 		tagj = inst.tag[j]
-	# 		solx[tagi,tagj] = if solx[i,j] > 0.0 solx[i,j] else solx[tagi,tagj] end
-	# 	end
-	# end
-	# sol.x = solx
-
-	println(x)
 	return (m,x,s,y)
 end
 
@@ -86,7 +73,6 @@ function post_process(cpu_time::Float64, inst, sol, others)
 	# Run a renvoyé le modèle et ses variables, qui ont été mis dans others.
 	m,x,s,y = others
 
-	print(m)
 	solx = value.(x)
 	emission_moyenne = 0
 	prod_moyenne = 0
@@ -99,7 +85,7 @@ function post_process(cpu_time::Float64, inst, sol, others)
 	emission_moyenne = emission_moyenne/prod_moyenne
 
 	println("OBJECTIF : $(objective_value(m))")
-	println("emission totale : $(emission_moyenne)")
+	println("emission moyenne : $(emission_moyenne)")
 	println("VALEURS de x : $(value.(x))")
 	println("VALEURS de s : $(value.(s))")
 	println("VALEURS de y : $(value.(y))")
