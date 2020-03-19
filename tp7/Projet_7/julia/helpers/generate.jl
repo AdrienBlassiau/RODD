@@ -30,7 +30,8 @@ module Generator
 
   Fonction de génération d'instance.
   """ ->
-  function generate(T::Int, M::Int, R::Int, Emax::Int, f::Array{Int}, e::Array{Int}, h::Int, p::Array{Int}, dmin::Int, dmax::Int)
+  function generate(T::Int, M::Int, R::Int, Emax::Int, f::Array{Int}, e::Array{Int}, h::Int, p::Array{Int}, d::Array{Int})
+
     inst = Instance()
 
     if (length(f) != M) || (length(e) != M) || (length(p) != M)
@@ -73,7 +74,7 @@ module Generator
 
     # d
     for i in 1:inst.T
-      push!(inst.d, rand(dmin:dmax))
+      push!(inst.d, d[i])
     end
 
     return inst
@@ -87,9 +88,9 @@ module Generator
 
   Utilise la fonction `generate(w, h, n, pw, ph, bounds_ω, bounds_ma)` pour construction une instance puis écriture de cette instance dans le fichier dont le chemin est `filename`.
   """ ->
-  function generate(T::Int, M::Int, R::Int, Emax::Int, f::Array{Int}, e::Array{Int}, h::Int, p::Array{Int}, dmin::Int, dmax::Int, filename::String)
+  function generate(T::Int, M::Int, R::Int, Emax::Int, f::Array{Int}, e::Array{Int}, h::Int, p::Array{Int}, d::Array{Int}, filename::String)
 
-    inst = generate(T, M, R, Emax, f, e, h, p, dmin, dmax)
+    inst = generate(T, M, R, Emax, f, e, h, p, d)
 
     datetimenow = Dates.now()
     date = Dates.format(datetimenow, "e, dd u yyyy HH:MM:SS")
