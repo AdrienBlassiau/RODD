@@ -24,7 +24,7 @@ int c[height][width] = ...;
 dvar boolean xp[height][width];
 dvar boolean xc[height][width];
 
-minimize sum(i in height) sum(j in height) c[i][j] * xp[i][j];
+minimize sum(i in height) sum(j in width) c[i][j] * xp[i][j];
 
 subject to {
   ctBords:

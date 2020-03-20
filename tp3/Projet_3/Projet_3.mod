@@ -18,16 +18,16 @@ range femelles = Nm+1..Nm+Nf;
 range genes = 1..G;
 range paires = 1..C;
 range alleles = 1..A;
-range humains = 1..N;
+range population = 1..N;
 range approx = 1..T;
 
-int individu[humains][paires][genes][alleles] = ...;
+int individu[population][paires][genes][alleles] = ...;
 
 float theta[approx];
 
 dvar float z[genes][alleles];
 dvar float t[genes][alleles];
-dvar int x[humains];
+dvar int x[population];
 
 execute FillTheta {
 	theta[1] = init;
@@ -42,16 +42,16 @@ subject to {
   CrtReproduction:
   	sum(i in males) x[i] == sum(i in femelles) x[i];
   CrtConservation:
-  	sum(i in humains) x[i] == 2*N;
+  	sum(i in population) x[i] == 2*N;
   CrtNbrEnfantsMax:
-  	forall(i in humains)
-  	  0 <= x[i] <= 3;
+  	forall(i in population)
+  	  0 <= x[i] <= 2;
   CrtProba1:
   	forall(j in genes, k in alleles)
-  	  z[j][k] >= t[j][k] - sum(i in humains : individu[i][1][j][1] == individu[i][1][j][2] && individu[i][1][j][1] == k) x[i];
+  	  z[j][k] >= t[j][k] - sum(i in population : individu[i][1][j][1] == individu[i][1][j][2] && individu[i][1][j][1] == k) x[i];
   CrtProba2:
   	forall(r in approx, j in genes, k in alleles)
-  	  ln(theta[r]) + (1/theta[r]) * (t[j][k] - theta[r]) >= sum(i in humains : individu[i][1][j][1] != individu[i][1][j][2]) x[i] * ln(0.5);
+  	  ln(theta[r]) + (1/theta[r]) * (t[j][k] - theta[r]) >= sum(i in population : individu[i][1][j][1] != individu[i][1][j][2]) x[i] * ln(0.5);
   CrtZNNeg:
   	forall(j in genes, k in alleles)
   	  z[j][k] >= 0;
@@ -62,7 +62,7 @@ subject to {
 	for(var i in genes){
 		for(var j in alleles){
 			var somme = 1;
-			for(var k in humains){
+			for(var k in population){
 				if(individu[k][1][i][1] == individu[k][1][i][2] && individu[k][1][i][1] == j) {
 					somme *= 0;
 				}

@@ -19,7 +19,7 @@ int t[height][width] = ...;
 int A[height][width][height][width];
 
 dvar boolean x[height][width];
-dvar float+ d[height][width];
+dvar float+ y[height][width][height][width];
 
 execute COMPUTE_AB {
 	for(var i in height) {
@@ -40,13 +40,19 @@ execute COMPUTE_AB {
 	}
 }
 
-maximize w1 * (sum(i in height, j in width) t[i][j] * (1 - x[i][j])) + w2 * g * L * (sum(i in height, j in width) (4*x[i][j] - d[i][j]));
-
-subject to {
-  ComputeD :
-  	forall (i in height)
-  	  forall (j in width)
-  		d[i][j] >= sum(k in height, l in width) A[i][j][k][l] * x[k][l] - 4 * (1 - x[i][j]);
-  LIMITParcell :
-	sum(i in height, j in width) x[i][j] >= 60;
+maximize
+  w1 * sum(i in width, j in height) t[i][j] * (1-x[i][j]) + 
+  w2*g*L* sum(i in width, j in height, k in width, l in height) A[i][j][k][l] *(x[i][j] - y[i][j][k][l]) + 
+  w2*g*L* sum(i in width) (x[i][1] + x[i][n]) +
+  w2*g*L* sum(i in width) (x[1][i] + x[m][i]);
+ 
+subject to{
+	forall (i in width, j in height, k in width, l in height: A[i][j][k][l]==1) {
+		1-x[i][j]-x[k][l]+y[i][j][k][l] >= 0;
+		y[i][j][k][l]>=0;
+	}
+	forall (i in width, j in height) {
+		x[i][j] <= 1;	
+	}
+	//sum(i in width, j in height) x[i][j] >= 60;
 }

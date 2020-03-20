@@ -2,18 +2,18 @@
 	<version>1.0</version>
 	<description>Exploitation durable de la for&amp;#234;t</description>
 	<configs>
-		<config default="true" name="Configuration 1" category="opl">
-			<ref name="Projet_6.ops" type="setting">
+		<config default="true" name="Configuration P4" category="opl">
+			<ref name="Projet_4_2.mod" type="model">
 			</ref>
-			<ref name="Projet_6_2.mod" type="model">
+			<ref name="Projet_4.ops" type="setting">
 			</ref>
-			<ref name="Projet_6_2.dat" type="data">
+			<ref name="Projet_4_2.dat" type="data">
 			</ref>
 		</config>
-		<config default="false" name="Configuration 2" category="opl">
-			<ref name="Projet_6.mod" type="model">
+		<config default="false" name="Configuration P1" category="opl">
+			<ref name="Projet_4.mod" type="model">
 			</ref>
-			<ref name="Projet_6.dat" type="data">
+			<ref name="Projet_4.dat" type="data">
 			</ref>
 		</config>
 	</configs>
